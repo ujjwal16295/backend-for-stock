@@ -24,7 +24,7 @@ if(cachedData){
     const data = await StockService.getAllStock(val,dbRef)
     const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
     await client.set(`${dbRef}${val}`,JSON.stringify(result))
-    await client.expire(`${dbRef}${val}`,30)
+    await client.expire(`${dbRef}${val}`,43200)
     
     res.json(result)
 }
