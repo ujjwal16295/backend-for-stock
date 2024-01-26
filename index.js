@@ -14,10 +14,8 @@ app.use(express.json())
 app.post("/",async(req,res)=>{
 const val = req.body.val
 const dbRef= req.body.dbRef
-console.log("called")
-console.log(val)
-console.log(dbRef)
-const cachedData = await client.get(`stocks${val}`)
+
+const cachedData = await client.get(`${dbRef}${val}`)
 
 if(cachedData){
     res.json(JSON.parse(cachedData))
@@ -25,8 +23,8 @@ if(cachedData){
 }else{
     const data = await StockService.getAllStock(val,dbRef)
     const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
-    await client.set(`stocks${val}`,JSON.stringify(result))
-    await client.expire(`stocks${val}`,30)
+    await client.set(`${dbRef}${val}`,JSON.stringify(result))
+    await client.expire(`${dbRef}${val}`,30)
     
     res.json(result)
 }
@@ -36,9 +34,7 @@ if(cachedData){
 app.post("/cart",async(req,res)=>{
     const val = req.body.val
     const cartname= req.body.cartname
-    console.log("cart called please work dude")
-    console.log(val)
-    console.log(cartname)
+
     const cachedData = await client.get(`stocks${cartname}:${val}`)
     if(cachedData){
         res.json(JSON.parse(cachedData))
