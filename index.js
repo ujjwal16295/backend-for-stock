@@ -24,7 +24,7 @@ if(cachedData){
     const data = await StockService.getAllStock(val,dbRef)
     const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
     await client.set(`stocks${val}`,JSON.stringify(result))
-    await client.expire(`stocks${val}`,10)
+    await client.expire(`stocks${val}`,30)
     
     res.json(result)
 }
@@ -45,7 +45,7 @@ app.post("/cart",async(req,res)=>{
         const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
 
         await client.set(`stocks${cartname}:${val}`,JSON.stringify(result))
-        await client.expire(`stocks${cartname}:${val}`,10)
+        await client.expire(`stocks${cartname}:${val}`,30)
         res.json(result)
     }
 
@@ -55,10 +55,10 @@ app.post("/cart",async(req,res)=>{
         const id = req.body.id
         const cartname= req.body.cartname
         
-        
-        const data = await StockService.deleteStockFromCart(id,cartname)
         const allkeys=  await client.keys(`stocks${cartname}:*`)
         await client.del(...allkeys)
+        const data = await StockService.deleteStockFromCart(id,cartname)
+
                 // const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
         
         })    
@@ -67,11 +67,11 @@ app.post("/cart",async(req,res)=>{
         app.put("/cart",async(req,res)=>{
             const stock = req.body.stock
             const cartname= req.body.cartname
-            
-            
-            const data = await StockService.addStock(stock,cartname)
             const allkeys=  await client.keys(`stocks${cartname}:*`)
             await client.del(...allkeys)
+            
+            const data = await StockService.addStock(stock,cartname)
+          
             // const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
             
             })         
