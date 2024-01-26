@@ -24,7 +24,7 @@ if(cachedData){
     const data = await StockService.getAllStock(val,dbRef)
     const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
     await client.set(`stocks${val}`,JSON.stringify(result))
-    await client.expire(`stocks${val}`,30)
+    await client.expire(`stocks${val}`,10)
     
     res.json(result)
 }
@@ -45,7 +45,7 @@ app.post("/cart",async(req,res)=>{
         const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
 
         await client.set(`stocks${cartname}:${val}`,JSON.stringify(result))
-        await client.expire(`stocks${cartname}:${val}`,30)
+        await client.expire(`stocks${cartname}:${val}`,10)
         res.json(result)
     }
 
