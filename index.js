@@ -2,6 +2,8 @@ import express from "express"
 import cors from "cors"
 import StockService from "./StockService.js"
 import client from "./client.js"
+import { auth } from "./FirebaseConfig.js"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 
 
 const app=express()
@@ -75,6 +77,41 @@ app.post("/cart",async(req,res)=>{
             // const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
             
             })         
+
+
+ 
+    
+    app.post("/auth",async(req,res)=>{
+        console.log("login called")
+        const authType = req.body.authType
+        const email= req.body.email
+        const password = req.body.password
+        if(authType==="login"){
+            signInWithEmailAndPassword(auth,email,password)
+            .then((usercredential)=>{
+               const useEmail= usercredential.user.email
+              res.json({email:usercredential.user.email})
+             
+     
+            })
+            .catch((error)=>{
+             res.json({email:"error",type:error})
+            })
+        }else if(authType==="signin"){
+
+            createUserWithEmailAndPassword(auth,email,password)
+            .then((usercredential)=>{
+    
+              res.json({email:usercredential.user.email})
+             
+     
+            })
+            .catch((error)=>{
+             res.json({email:"error",type:error})
+            })
+        }
+        
+    })   
 
 app.listen(4000,()=>{
     console.log("server has started")
