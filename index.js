@@ -15,6 +15,7 @@ app.post("/",async(req,res)=>{
 const val = req.body.val
 const dbRef= req.body.dbRef
 
+
 const cachedData = await client.get(`${dbRef}${val}`)
 
 if(cachedData){
@@ -34,6 +35,7 @@ if(cachedData){
 app.post("/cart",async(req,res)=>{
     const val = req.body.val
     const cartname= req.body.cartname
+
 
     const cachedData = await client.get(`stocks${cartname}:${val}`)
     if(cachedData){
@@ -82,6 +84,10 @@ app.post("/cart",async(req,res)=>{
         const authType = req.body.authType
         const email= req.body.email
         const password = req.body.password
+
+        const user = auth.currentUser;
+        const authEmail= user===null?"error":user.email
+
         if(authType==="login"){
             signInWithEmailAndPassword(auth,email,password)
             .then((usercredential)=>{
@@ -105,6 +111,8 @@ app.post("/cart",async(req,res)=>{
             .catch((error)=>{
              res.json({email:"error",type:error})
             })
+        }else if(authType==="check"){
+            res.json({email:authEmail})
         }
         
     })   
