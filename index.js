@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import StockService from "./StockService.js"
-import client from "./client.js"
+// import client from "./client.js"
 import { auth } from "./FirebaseConfig.js"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 
@@ -15,19 +15,19 @@ app.post("/",async(req,res)=>{
 const val = req.body.val
 const dbRef= req.body.dbRef
 
-const cachedData = await client.get(`${dbRef}${val}`)
+// const cachedData = await client.get(`${dbRef}${val}`)
 
-if(cachedData){
-    res.json(JSON.parse(cachedData))
+// if(cachedData){
+//     res.json(JSON.parse(cachedData))
 
-}else{
+// }else{
     const data = await StockService.getAllStock(val,dbRef)
     const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
-    await client.set(`${dbRef}${val}`,JSON.stringify(result))
-    await client.expire(`${dbRef}${val}`,43200)
+    // await client.set(`${dbRef}${val}`,JSON.stringify(result))
+    // await client.expire(`${dbRef}${val}`,43200)
     
     res.json(result)
-}
+// }
 
 
 })
@@ -35,17 +35,17 @@ app.post("/cart",async(req,res)=>{
     const val = req.body.val
     const cartname= req.body.cartname
 
-    const cachedData = await client.get(`stocks${cartname}:${val}`)
-    if(cachedData){
-        res.json(JSON.parse(cachedData))
-    }else{
+    // const cachedData = await client.get(`stocks${cartname}:${val}`)
+    // if(cachedData){
+    //     res.json(JSON.parse(cachedData))
+    // }else{
         const data = await StockService.getAllStockForCart(val,cartname)
         const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
 
         await client.set(`stocks${cartname}:${val}`,JSON.stringify(result))
         await client.expire(`stocks${cartname}:${val}`,30)
         res.json(result)
-    }
+    // }
 
     })
 
@@ -54,7 +54,7 @@ app.post("/cart",async(req,res)=>{
         const cartname= req.body.cartname
         
         const allkeys=  await client.keys(`stocks${cartname}:*`)
-        await client.del(...allkeys)
+        // await client.del(...allkeys)
         const data = await StockService.deleteStockFromCart(id,cartname)
 
                 // const result= data.docs.map((doc)=>({...doc.data(),id:doc.id}))
@@ -65,8 +65,8 @@ app.post("/cart",async(req,res)=>{
         app.put("/cart",async(req,res)=>{
             const stock = req.body.stock
             const cartname= req.body.cartname
-            const allkeys=  await client.keys(`stocks${cartname}:*`)
-            await client.del(...allkeys)
+            // const allkeys=  await client.keys(`stocks${cartname}:*`)
+            // await client.del(...allkeys)
             
             const data = await StockService.addStock(stock,cartname)
           

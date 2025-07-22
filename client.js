@@ -1,13 +1,13 @@
-import { Redis } from "ioredis";
+// import { Redis } from "ioredis";
 
-const client = new Redis({
-    host: 'redis-12809.c323.us-east-1-2.ec2.cloud.redislabs.com',
-    port: 12809,
-    password: 'Kq1ccVlJgKhvOji1S7EunHs7O833napM',
-});
+// const client = new Redis({
+//     host: 'redis-12809.c323.us-east-1-2.ec2.cloud.redislabs.com',
+//     port: 12809,
+//     password: 'Kq1ccVlJgKhvOji1S7EunHs7O833napM',
+// });
 
 
-export default client;
+// export default client;
 
 
 
